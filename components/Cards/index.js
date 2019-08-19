@@ -17,3 +17,61 @@
 // </div>
 //
 // Create a card for each of the articles and add the card to the DOM.
+
+function cardCreator(headlineText, cardImageUrl, authorName) {
+  // <div class="card">
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  // <div class="headline">{Headline of article}</div>
+  const headline = document.createElement("div");
+  headline.classList.add("headline");
+  headline.textContent = headlineText;
+  card.appendChild(headline);
+
+  // <div class="author">
+  const authorDiv = document.createElement("div");
+  authorDiv.classList.add("author");
+  card.appendChild(authorDiv);
+
+  // <div class="img-container">
+  const imageContainer = document.createElement("div");
+  imageContainer.classList.add("img-container");
+  authorDiv.appendChild(imageContainer);
+
+  // <img src={url of authors image} />
+  const cardImage = document.createElement("img");
+  cardImage.src = cardImageUrl;
+  imageContainer.appendChild(cardImage);
+
+  // <span>By {authors name}</span>
+  const author = document.createElement("span");
+  author.textContent = authorName;
+  authorDiv.appendChild(author);
+
+  return card;
+}
+
+const cardsContainer = document.querySelector(".cards-container");
+
+axios
+  .get("https://lambda-times-backend.herokuapp.com/articles")
+  .then(response => {
+    // network request finished
+    const articles = Object.entries(response.data.articles);
+
+    articles.forEach(([key, article]) => {
+      article.forEach(articleData => {
+        const newCard = cardCreator(
+          articleData.headline,
+          articleData.authorPhoto,
+          articleData.authorName
+        );
+        cardsContainer.appendChild(newCard);
+      });
+    });
+  })
+  .catch(error => {
+    console.log("Network request was unsuccessful");
+    console.log(error);
+  });
