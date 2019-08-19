@@ -23,8 +23,8 @@ axios
   .then(response => {
     // network request finished
     const topicsArray = response.data.topics;
-    topicsArray.forEach(item => {
-      const newTab = topicCreator(item);
+    topicsArray.forEach(topic => {
+      const newTab = topicCreator(topic);
       tabsContainer.appendChild(newTab);
     });
   })
